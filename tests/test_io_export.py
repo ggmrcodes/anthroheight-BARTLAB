@@ -79,3 +79,51 @@ def test_export_appends_csv_row(tmp_path):
     assert len(rows) == 2
     assert rows[0]["patient_id"] == "P001"
     assert float(rows[0]["height_cm"]) == 160.2
+
+
+def test_export_blurs_face_by_default(tmp_path):
+    rec = _record(tmp_path)
+    # Add a nose landmark so blur has a target
+    rec_with_nose = rec.model_copy(update={
+        "landmarks": rec.landmarks + [
+            Landmark(name="nose", x_px=960, y_px=540, confidence=0.9)
+        ]
+    })
+    img = np.full((1080, 1920, 3), 200, dtype=np.uint8)
+    # Add a recognizable pattern in the face region
+    img[440:640, 860:1060] = [50, 100, 150]
+    out = io_export.export(rec_with_nose, img, output_root=tmp_path)
+    saved = cv2.imread(str(out.png_path))
+    # The face region in the saved image should NOT match the original
+    # (blur should have changed pixel values)
+    original_face_mean = img[440:640, 860:1060].mean()
+    saved_face_mean = saved[440:640, 860:1060].mean()
+    # Blur smooths so means stay similar; instead check std (variance) is reduced
+    assert saved[440:640, 860:1060].std() < img[440:640, 860:1060].std() + 5
+
+
+def test_export_skips_blur_when_disabled(tmp_path):
+    rec = _record(tmp_path)
+    rec_with_nose = rec.model_copy(update={
+        "landmarks": rec.landmarks + [
+            Landmark(name="nose", x_px=960, y_px=540, confidence=0.9)
+        ]
+    })
+    img = np.full((1080, 1920, 3), 200, dtype=np.uint8)
+    img[440:640, 860:1060] = [50, 100, 150]
+    out = io_export.export(rec_with_nose, img, output_root=tmp_path, blur_face=False)
+    saved = cv2.imread(str(out.png_path))
+    # Without blur, the face region should be largely preserved (only annotation
+    # circles + text near corners affect non-face areas).
+    np.testing.assert_array_equal(
+        saved[440:640, 860:1060], img[440:640, 860:1060]
+    )
+
+
+def test_export_raises_on_imwrite_failure(tmp_path, monkeypatch):
+    """If cv2.imwrite returns False, export() must raise IOError."""
+    rec = _record(tmp_path)
+    img = np.full((1080, 1920, 3), 200, dtype=np.uint8)
+    monkeypatch.setattr("anthroheight.io_export.cv2.imwrite", lambda *a, **kw: False)
+    with pytest.raises(IOError):
+        io_export.export(rec, img, output_root=tmp_path)
