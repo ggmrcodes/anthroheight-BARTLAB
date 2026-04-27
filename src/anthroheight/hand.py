@@ -216,6 +216,11 @@ class HandDetector:
                 continue
 
             mp_lm = hand_lms.landmark[MIDDLE_FINGERTIP_INDEX]
+            # NOTE: MediaPipe Hands Tasks API does not expose per-landmark visibility/
+            # confidence. We use the handedness classification score as a proxy — it
+            # reflects detector confidence in the hand as a whole, not the fingertip
+            # specifically. Downstream validate.py treats this the same as pose
+            # landmark confidence; this is a known approximation, not a bug.
             return Landmark(
                 name=f"middle_fingertip_{side.lower()}",
                 x_px=mp_lm.x * w,

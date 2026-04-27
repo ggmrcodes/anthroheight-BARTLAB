@@ -44,3 +44,26 @@ def test_hand_wrapper_returns_none_when_no_hand_detected():
     with patch.object(detector, "_raw_process", return_value=no_hands):
         lm = detector.detect_middle_fingertip(img, side="left")
     assert lm is None
+
+
+def test_hand_wrapper_returns_right_fingertip():
+    """Verify the side.capitalize() match works for the right hand too."""
+    img = np.zeros((1080, 1920, 3), dtype=np.uint8)
+    detector = hand.HandDetector()
+    with patch.object(detector, "_raw_process",
+                      return_value=_fake_hands_result("Right", (0.3, 0.4))):
+        lm = detector.detect_middle_fingertip(img, side="right")
+    assert lm is not None
+    assert lm.name == "middle_fingertip_right"
+    assert abs(lm.x_px - 0.3 * 1920) < 1
+    assert abs(lm.y_px - 0.4 * 1080) < 1
+
+
+def test_hand_wrapper_returns_none_when_only_wrong_side_present():
+    """If only the LEFT hand is detected and we ask for the RIGHT, return None."""
+    img = np.zeros((1080, 1920, 3), dtype=np.uint8)
+    detector = hand.HandDetector()
+    with patch.object(detector, "_raw_process",
+                      return_value=_fake_hands_result("Left", (0.7, 0.5))):
+        lm = detector.detect_middle_fingertip(img, side="right")
+    assert lm is None
