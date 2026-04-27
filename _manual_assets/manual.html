@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>anthroheight — User Manual</title>
+<style>
+  :root {
+    --bg:     #E5E2D5;
+    --ink:    #1A1A1A;
+    --accent: #9B2520;
+    --rule:   #C73E33;
+    --muted:  #555550;
+    --soft:   #F2EFE3;
+    --tipbg:  #EAE7DA;
+    --warnbg: #F4DEDA;
+    --techbg: #ECE9DC;
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body {
+    font-family: 'Helvetica Neue', 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-size: 11pt;
+    line-height: 1.55;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 22mm 22mm 28mm 22mm;
+    position: relative;
+    page-break-after: always;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* page footer + page numbers */
+  .pageno {
+    position: absolute;
+    bottom: 12mm; right: 22mm;
+    font-family: 'Bodoni 72', 'Bodoni Moda', 'Didot', serif;
+    color: var(--accent);
+    font-size: 11pt; font-weight: 700;
+  }
+  .footline {
+    position: absolute;
+    bottom: 12mm; left: 22mm; right: 40mm;
+    font-size: 8.5pt; color: var(--muted);
+    display: flex; justify-content: space-between;
+  }
+  .footline .doc-id {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    color: var(--muted);
+  }
+
+  h1.cover-title {
+    font-size: 30pt; font-weight: 400; letter-spacing: -0.4px;
+    margin: 0 0 6pt 0; line-height: 1.1;
+  }
+  h1.section-title {
+    font-size: 19pt; font-weight: 500; letter-spacing: -0.2px;
+    margin: 0 0 4pt 0;
+  }
+  h2 {
+    font-size: 12pt; font-weight: 600; margin: 11pt 0 4pt 0;
+    color: var(--ink);
+  }
+  h2 .num {
+    color: var(--accent); margin-right: 6pt; font-weight: 700;
+  }
+  h3 {
+    font-size: 10.5pt; font-weight: 600; margin: 9pt 0 2pt 0;
+  }
+  p { margin: 0 0 6pt 0; }
+  .lede {
+    font-size: 12pt; line-height: 1.5; color: var(--ink);
+    margin-bottom: 10pt;
+  }
+
+  .red-eyebrow {
+    color: var(--accent); font-weight: 700; font-size: 8.5pt;
+    letter-spacing: 1.4px; text-transform: uppercase;
+  }
+  hr.rule {
+    border: 0; border-top: 1px solid var(--accent); margin: 7pt 0 12pt 0;
+  }
+  hr.thin {
+    border: 0; border-top: 0.5px solid var(--muted); margin: 4pt 0 10pt 0;
+  }
+
+  /* generic callouts */
+  .note {
+    border-left: 3px solid var(--ink);
+    background: var(--tipbg);
+    padding: 7pt 11pt;
+    margin: 8pt 0;
+    font-size: 10pt;
+  }
+  .caution {
+    border-left: 3px solid var(--accent);
+    background: var(--warnbg);
+    padding: 7pt 11pt;
+    margin: 8pt 0;
+    font-size: 10pt;
+  }
+  .note .tag, .caution .tag {
+    font-weight: 700; letter-spacing: 1.0px; font-size: 8pt;
+    text-transform: uppercase; display: block; margin-bottom: 3pt;
+    color: var(--ink);
+  }
+  .caution .tag { color: var(--accent); }
+
+  /* Technical-detail box (deeper-than-overview content for bio-eng readers) */
+  .techbox {
+    background: var(--techbg);
+    border: 0.5px solid #B0AB9E;
+    padding: 8pt 11pt; margin: 6pt 0 10pt 0;
+    font-size: 9.5pt; line-height: 1.5;
+  }
+  .techbox .tag {
+    color: var(--accent); font-weight: 700; font-size: 8pt;
+    letter-spacing: 1.2px; text-transform: uppercase;
+    display: block; margin-bottom: 3pt;
+  }
+  .techbox p { margin-bottom: 4pt; }
+  .techbox p:last-child { margin-bottom: 0; }
+
+  /* displayed equation */
+  .formula {
+    font-family: 'Latin Modern Math', 'Cambria Math', 'STIX Two Math',
+                 'Times New Roman', serif;
+    font-size: 10.5pt;
+    margin: 5pt 0 5pt 12pt;
+    color: var(--ink);
+  }
+  .formula em { font-style: italic; }
+
+  /* numbered procedure steps */
+  ol.steps { padding: 0; margin: 8pt 0; list-style: none; counter-reset: step; }
+  ol.steps > li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 30pt;
+    margin-bottom: 10pt;
+  }
+  ol.steps > li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: -1pt;
+    width: 20pt; height: 20pt;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: var(--accent); font-size: 10pt;
+    background: var(--bg);
+  }
+  ol.steps > li h3 { margin-top: 0; }
+
+  ul.clean { padding-left: 16pt; margin: 5pt 0; }
+  ul.clean li { margin-bottom: 3pt; }
+
+  code, .mono {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    background: rgba(0,0,0,0.05);
+    padding: 1.5pt 4pt; border-radius: 3pt;
+    font-size: 9pt;
+  }
+
+  /* document control header on cover */
+  table.doc-control {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin-top: 6pt;
+  }
+  table.doc-control td {
+    padding: 5pt 8pt;
+    border-top: 1px solid #B0AB9E;
+    vertical-align: top;
+  }
+  table.doc-control td.label {
+    width: 32%;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1.0px;
+    text-transform: uppercase;
+    font-size: 8pt;
+    font-family: 'SF Mono', 'Menlo', monospace;
+  }
+  table.doc-control tr:last-child td { border-bottom: 1px solid #B0AB9E; }
+
+  /* table of contents */
+  ol.toc { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+  ol.toc > li {
+    counter-increment: toc;
+    display: grid;
+    grid-template-columns: 22pt 1fr auto;
+    align-items: baseline;
+    padding: 5pt 0;
+    border-bottom: 0.5px dotted #B0AB9E;
+    font-size: 11pt;
+  }
+  ol.toc > li::before {
+    content: counter(toc) ".";
+    color: var(--accent);
+    font-weight: 700;
+  }
+  ol.toc > li .title { padding-right: 8pt; }
+  ol.toc > li .pg {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    color: var(--muted);
+    font-size: 10pt;
+  }
+
+  /* layouts */
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 14pt; }
+  .threecol { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12pt; }
+
+  /* tables */
+  table.glossary, table.troubleshoot, table.refs, table.revhistory {
+    width: 100%; border-collapse: collapse; font-size: 10pt; line-height: 1.4;
+  }
+  table.glossary th, table.troubleshoot th, table.refs th, table.revhistory th {
+    text-align: left; padding: 5pt 6pt;
+    border-bottom: 1px solid var(--ink);
+    font-weight: 700; font-size: 8.5pt;
+    letter-spacing: 0.8px; text-transform: uppercase;
+    color: var(--accent);
+  }
+  table.glossary td, table.troubleshoot td,
+  table.refs td, table.revhistory td {
+    padding: 6pt 6pt; border-bottom: 0.5px solid #C9C5B6; vertical-align: top;
+  }
+  table.glossary td.term { font-weight: 600; width: 28%; }
+  table.troubleshoot td:first-child { font-weight: 600; width: 38%; }
+  table.refs td.refnum {
+    width: 9%; font-weight: 700; color: var(--accent);
+    font-family: 'SF Mono', 'Menlo', monospace; font-size: 9pt;
+  }
+  table.revhistory { font-size: 9pt; line-height: 1.35; }
+  table.revhistory td { padding: 4pt 5pt; }
+  table.revhistory th { padding: 4pt 5pt; font-size: 8pt; }
+  table.revhistory td.ver { width: 9%; font-weight: 600; }
+  table.revhistory td.date { width: 14%;
+    font-family: 'SF Mono', 'Menlo', monospace; font-size: 8.5pt; }
+  table.revhistory td.who { width: 11%; }
+
+  /* figures */
+  figure {
+    margin: 7pt 0;
+    text-align: center;
+  }
+  figure img {
+    max-width: 100%;
+    max-height: 80mm;
+    object-fit: contain;
+    border: 0.5px solid var(--ink);
+    border-radius: 3pt;
+    background: #fff;
+    display: block;
+    margin: 0 auto;
+  }
+  figcaption {
+    font-size: 8.5pt;
+    color: var(--muted);
+    margin-top: 4pt;
+    font-style: italic;
+    text-align: left;
+    padding: 0 4mm;
+  }
+  figcaption strong {
+    color: var(--accent);
+    font-style: normal;
+    margin-right: 5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-size: 8.5pt;
+  }
+
+  /* pipeline diagram */
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    margin: 8pt 0 4pt 0;
+    align-items: stretch;
+  }
+  .pipeline .stage {
+    background: var(--soft);
+    border: 0.5px solid var(--ink);
+    padding: 6pt 4pt;
+    text-align: center;
+    font-size: 8.5pt;
+    line-height: 1.3;
+    position: relative;
+  }
+  .pipeline .stage:not(:last-child)::after {
+    content: '\25B6';
+    position: absolute;
+    right: -7pt; top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 9pt;
+    z-index: 2;
+    background: var(--bg);
+    padding: 0 1pt;
+  }
+  .pipeline .stage .stagename {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 7.5pt;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2pt;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<section class="page">
+  <div style="margin-top: 18mm;">
+    <div class="red-eyebrow">bart lab &middot; user manual</div>
+    <h1 class="cover-title" style="margin-top: 8pt; max-width: 130mm;">
+      anthroheight
+    </h1>
+    <p class="lede" style="margin-top: 8pt; max-width: 130mm; font-size: 12.5pt;">
+      Computer-vision estimation of standing height from a single supine RGB capture.
+    </p>
+  </div>
+
+  <div style="position: absolute; bottom: 32mm; left: 22mm; right: 22mm;">
+    <div class="red-eyebrow" style="margin-bottom: 4pt;">document control</div>
+    <table class="doc-control">
+      <tr>
+        <td class="label">Project</td>
+        <td>anthroheight &mdash; supine height estimator (v1)</td>
+      </tr>
+      <tr>
+        <td class="label">Document</td>
+        <td>User Manual</td>
+      </tr>
+      <tr>
+        <td class="label">Version</td>
+        <td>1.0 &middot; first issue</td>
+      </tr>
+      <tr>
+        <td class="label">Issue date</td>
+        <td>27 April 2026</td>
+      </tr>
+      <tr>
+        <td class="label">Author</td>
+        <td>Hatayasit Aroonvanichporn (ggmr) &middot; BART Lab</td>
+      </tr>
+      <tr>
+        <td class="label">Status</td>
+        <td>For internal lab review</td>
+      </tr>
+      <tr>
+        <td class="label">Reviewed by</td>
+        <td>__________________________________</td>
+      </tr>
+    </table>
+  </div>
+  <div class="pageno">i</div>
+</section>
+
+
+<!-- ============ TOC ============ -->
+<section class="page">
+  <div class="red-eyebrow">contents</div>
+  <h1 class="section-title">Table of contents</h1>
+  <hr class="rule">
+
+  <ol class="toc">
+    <li><span class="title">Overview</span><span class="pg">p. 01</span></li>
+    <li><span class="title">How it works</span><span class="pg">p. 02</span></li>
+    <li><span class="title">Setup requirements</span><span class="pg">p. 04</span></li>
+    <li><span class="title">Measurement procedure</span><span class="pg">p. 05</span></li>
+    <li><span class="title">Reading the result</span><span class="pg">p. 06</span></li>
+    <li><span class="title">User interface</span><span class="pg">p. 07</span></li>
+    <li><span class="title">Warnings and quality flags</span><span class="pg">p. 08</span></li>
+    <li><span class="title">Indications and limitations</span><span class="pg">p. 09</span></li>
+    <li><span class="title">Troubleshooting</span><span class="pg">p. 10</span></li>
+    <li><span class="title">Glossary</span><span class="pg">p. 11</span></li>
+    <li><span class="title">References</span><span class="pg">p. 12</span></li>
+    <li><span class="title">Revision history</span><span class="pg">p. 13</span></li>
+  </ol>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">ii</div>
+</section>
+
+
+<!-- ============ §1 OVERVIEW ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 1</div>
+  <h1 class="section-title">Overview</h1>
+  <hr class="rule">
+
+  <h2><span class="num">1.1</span>Purpose</h2>
+  <p>
+    The <strong>anthroheight</strong> system estimates a patient&rsquo;s standing height (stature) from a single overhead RGB photograph taken while the patient lies supine.
+    The intended users are clinical research staff and allied-health professionals at the BART Lab who routinely need height for patients who cannot stand on a stadiometer.
+  </p>
+
+  <h2><span class="num">1.2</span>Clinical motivation</h2>
+  <p>
+    Stature drives several routine clinical calculations:
+  </p>
+  <ul class="clean">
+    <li>weight-normalised drug dosing (mg/kg of lean body mass);</li>
+    <li>nutritional assessment via Body Mass Index and the BAPEN MUST screening tool;</li>
+    <li>enteral-feed formula prescription;</li>
+    <li>pediatric growth tracking.</li>
+  </ul>
+  <p>
+    Direct stature measurement requires the patient to stand against a stadiometer. For patients with paralysis, severe contractures, advanced frailty, or neurodevelopmental disability that makes the procedure distressing, this is impractical or impossible.
+    Existing surrogate methods (e.g. knee height with mechanical callipers, demispan with a flexible tape) require physical contact, user training, and a non-trivial measurement time per patient.
+  </p>
+
+  <h2><span class="num">1.3</span>What this system does, in one sentence</h2>
+  <p class="lede" style="font-size: 11.5pt;">
+    A nurse takes one overhead photograph of the patient lying on a marked bed mat; software returns an estimated standing height in centimetres, with its known statistical uncertainty.
+  </p>
+
+  <div class="note">
+    <span class="tag">Scope</span>
+    This document covers user use only &mdash; setup, capture, result interpretation, troubleshooting. The companion design document and source repository hold algorithm derivations, validation data and engineering details.
+  </div>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">01</div>
+</section>
+
+
+<!-- ============ §2 HOW IT WORKS — page A ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 2</div>
+  <h1 class="section-title">How it works</h1>
+  <hr class="rule">
+
+  <p>
+    The system reduces stature estimation to three image-processing problems
+    chained into a single pipeline. Each stage has a plain-language description
+    and a deeper technical box for readers with a biomedical-engineering background.
+  </p>
+
+  <div class="pipeline">
+    <div class="stage"><span class="stagename">capture</span>raw RGB frame</div>
+    <div class="stage"><span class="stagename">QC</span>blur, exposure, marker count</div>
+    <div class="stage"><span class="stagename">calibrate</span>bed-plane homography</div>
+    <div class="stage"><span class="stagename">pose</span>33 body landmarks</div>
+    <div class="stage"><span class="stagename">measure</span>segment length (mm)</div>
+    <div class="stage"><span class="stagename">estimate</span>regression formula</div>
+    <div class="stage"><span class="stagename">export</span>PNG + JSON + CSV</div>
+  </div>
+  <p style="font-size: 8.5pt; color: var(--muted); margin-top: 2pt;">
+    Figure 0. End-to-end processing pipeline. Each stage is a separate, independently testable Python module.
+  </p>
+
+  <h2><span class="num">2.1</span>Step 1 &mdash; Find the ruler (bed-plane calibration)</h2>
+  <p>
+    To convert pixels into millimetres the system needs a known-size object in the scene. Four black-and-white square patterns of known geometry are printed on the bed mat at fixed corner positions. The software locates these in the photograph and computes the geometric transformation from image pixels to bed-surface millimetres.
+  </p>
+
+  <div class="techbox">
+    <span class="tag">Technical detail</span>
+    <p>
+      The four fiducials are <strong>ArUco markers</strong> from the <code>DICT_5X5_50</code> dictionary, detected by OpenCV&rsquo;s <code>cv2.aruco.ArucoDetector</code> with default sub-pixel corner refinement. The bed mat layout pins four marker IDs to known <em>(x, y)</em> coordinates in millimetres on the bed surface (e.g. ID 0 at the head-left corner, ID 2 at the foot-right corner of a 600 &times; 1800 mm rectangle).
+    </p>
+    <p>
+      Given the four detected pixel centroids and their known mm targets, the system solves for the planar projective transform <em>H</em><sub>px&rarr;mm</sub> using <code>cv2.findHomography</code> with <strong>RANSAC</strong> (reprojection threshold 2 px). Bed-plane scale is derived from the edge length between two adjacent markers:
+    </p>
+    <p class="formula">
+      mm/px = &Vert;<em>p</em><sub>mm,1</sub> &minus; <em>p</em><sub>mm,2</sub>&Vert; &nbsp;&divide;&nbsp; &Vert;<em>p</em><sub>px,1</sub> &minus; <em>p</em><sub>px,2</sub>&Vert;
+    </p>
+    <p>
+      Reprojection error (mean Euclidean residual after re-projecting source points through <em>H</em>) is reported in pixels and gates the QC stage; values above ~4 px indicate a wrinkled mat or a non-planar capture and trigger a re-shoot prompt.
+    </p>
+  </div>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">02</div>
+</section>
+
+
+<!-- ============ §2 HOW IT WORKS — page B ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 2 &middot; continued</div>
+  <h1 class="section-title">How it works (cont.)</h1>
+  <hr class="rule">
+
+  <h2><span class="num">2.2</span>Step 2 &mdash; Find the body (pose landmark detection)</h2>
+  <p>
+    The system needs to know the pixel coordinates of anatomical landmarks: knees, ankles, shoulders, hips, wrists, etc. A pre-trained machine-learning model returns 33 named landmarks per detected person.
+  </p>
+
+  <div class="techbox">
+    <span class="tag">Technical detail</span>
+    <p>
+      Landmark detection uses Google&rsquo;s <strong>MediaPipe Pose Landmarker</strong> (Tasks API, <em>BlazePose</em>-derived 33-keypoint model bundle <code>pose_landmarker_lite.task</code>, ~5.5 MB). The model is loaded once at first use and runs locally on CPU; no network call is made.
+    </p>
+    <p>
+      The 33-landmark output schema is the standard BlazePose topology (nose, eyes, ears, mouth corners, shoulders, elbows, wrists, hips, knees, ankles, heels, foot indices). The system uses only the landmarks needed by the chosen surrogate; the rest are still produced for downstream deformity-flag heuristics (e.g. shoulder-line tilt for scoliosis suspicion).
+    </p>
+    <p>
+      Each landmark carries a <em>visibility</em> score in [0, 1]. Landmarks below a 0.5 visibility threshold raise a low-confidence warning rather than silently propagating into the surrogate calculation.
+    </p>
+  </div>
+
+  <h2><span class="num">2.3</span>Step 3 &mdash; Use a clinical regression formula</h2>
+  <p>
+    The system does <strong>not</strong> take a head-to-foot pixel measurement and call that &ldquo;height&rdquo;. For any patient with kyphosis, scoliosis, contracture, or amputation, that head-to-foot distance is biased &mdash; sometimes by more than 10 cm. Instead, one well-defined skeletal segment is measured (e.g. knee height, demispan, ulna length) and substituted into a published regression that maps that segment to standing stature.
+  </p>
+
+  <div class="techbox">
+    <span class="tag">Technical detail &mdash; surrogate formulas</span>
+    <p>
+      Three formulas are bundled in v1, selected by user-input clinical flags:
+    </p>
+    <p style="margin-top: 5pt;">
+      <strong>Chumlea (1985)</strong> &mdash; knee-to-ankle height, primary surrogate for elderly patients with vertebral height loss:
+    </p>
+    <p class="formula">
+      stature<sub>cm</sub> = <em>a</em> + <em>b</em> &middot; KH<sub>cm</sub> + <em>c</em> &middot; age<sub>yr</sub>
+    </p>
+    <p>
+      with <em>(a, b, c)</em> tabulated by sex and ethnicity (e.g. white female: 84.88, 1.83, &minus;0.24; SEE 3.5 cm). Validated 60&ndash;90 yr cohort.
+    </p>
+    <p style="margin-top: 5pt;">
+      <strong>Bassey (1986)</strong> &mdash; demispan (sternal notch to middle-fingertip), used when the knee cannot be flexed:
+    </p>
+    <p class="formula">
+      stature<sub>cm</sub> = <em>a</em> + <em>b</em> &middot; DS<sub>cm</sub> &nbsp;&nbsp;&mdash; female: 60.1 + 1.35&middot;DS, SEE 4.0 cm
+    </p>
+    <p style="margin-top: 5pt;">
+      <strong>BAPEN MUST / NICE&nbsp;CG32</strong> &mdash; ulna-length lookup tables, age-banded by sex; the most robust option for severely disabled patients.
+    </p>
+    <p style="margin-top: 5pt;">
+      The Standard Error of Estimate (SEE) of each formula is reported with every result &mdash; the residual standard deviation of stature predictions on the formula&rsquo;s validation cohort, i.e. the &ldquo;&plusmn;&rdquo; figure accompanying the height number. Skeletal-segment regression itself is the standard non-stadiometer technique in clinical nutrition (NICE&nbsp;CG32); anthroheight contributes the automated capture, calibration and segment measurement.
+    </p>
+  </div>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">03</div>
+</section>
+
+
+<!-- ============ §3 SETUP ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 3</div>
+  <h1 class="section-title">Setup requirements</h1>
+  <hr class="rule">
+
+  <p class="lede">
+    Initial deployment in a room takes approximately ten minutes. After that, every measurement is a single button click.
+  </p>
+
+  <h2><span class="num">3.1</span>One-time setup</h2>
+  <ul class="clean">
+    <li><strong>Bed mat with four printed ArUco markers.</strong> A ready-to-print A4 sheet (<em>anthroheight Bed-Mat Markers</em>) is distributed with this manual. Print at 100% scale, cut along the dashed lines, lay the four markers face-up at the four corners of a 60 &times; 180 cm rectangle on the bed or floor. A printed scale-check bar on the sheet verifies print fidelity.</li>
+    <li><strong>Camera mounted overhead.</strong> Any USB UVC webcam or laptop built-in camera (≥720p) suffices. The camera must be positioned approximately above the patient&rsquo;s torso, looking straight down. A simple tripod, ceiling bracket, or chair-mounted clamp is acceptable.</li>
+    <li><strong>Host computer.</strong> Laptop running macOS, Windows, or Linux with Python 3.11+. The application is installed once via <code>pip install -e .</code> from the repository root. After installation no internet connection is required.</li>
+  </ul>
+
+  <h2><span class="num">3.2</span>Per-patient setup</h2>
+  <ul class="clean">
+    <li>The patient lies supine on the marked area, arms by their sides, head at the marker pair labelled IDs 0/1.</li>
+    <li>The user enters patient demographics into the user interface: ID, age, sex, ethnicity, and clinical flags (kyphosis, scoliosis, lower-limb contracture, upper-limb contracture, amputation).</li>
+    <li>The user confirms all four markers are visible (not covered by sheets, blankets, or clothing) and triggers capture.</li>
+  </ul>
+
+  <h2><span class="num">3.3</span>What is <em>not</em> required</h2>
+  <ul class="clean">
+    <li>No skin-contact markers, stickers, or fiducials on the patient.</li>
+    <li>No depth camera, structured-light sensor, or infrared illumination.</li>
+    <li>No internet connection at measurement time. All inference and storage are local.</li>
+    <li>No specialist computer-vision training for the user.</li>
+  </ul>
+
+  <div class="note">
+    <span class="tag">Privacy by default</span>
+    Every saved photograph is automatically face-blurred before disk write. The unblurred frame is held only in process memory during the measurement and is discarded when the next capture runs. Disabling face blur requires an explicit user override.
+  </div>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">04</div>
+</section>
+
+
+<!-- ============ §4 PROCEDURE ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 4</div>
+  <h1 class="section-title">Measurement procedure</h1>
+  <hr class="rule">
+
+  <ol class="steps">
+    <li>
+      <h3>Launch the application</h3>
+      <p>From the project root, run <code>streamlit run src/anthroheight/ui_streamlit.py</code>. A browser tab opens at <code>localhost:8501</code> showing the user interface. The application runs locally; no internet connection is required.</p>
+    </li>
+    <li>
+      <h3>Enter patient information</h3>
+      <p>Patient ID, age (years), sex, ethnicity, and any applicable clinical flags. The flags drive automatic surrogate-formula selection: lower-limb contracture or amputation, for example, switches the recommended surrogate from knee height to ulna length.</p>
+    </li>
+    <li>
+      <h3>Position the patient</h3>
+      <p>Supine on the marked area, head at the IDs 0/1 end, arms by the sides. Verify that all four corner markers are unobstructed by linen or limbs. Reasonable, even overhead lighting is sufficient; avoid direct sunlight on the markers.</p>
+    </li>
+    <li>
+      <h3>Capture</h3>
+      <p>Select <em>Camera (live CV)</em> in the sidebar and start the live preview. The interface overlays real-time computer-vision feedback (see &sect;6). When all four markers are detected and the QC indicators are green, either tap <strong>Snap now</strong> or hold steady for 1.5 s to trigger the auto-shutter. Within ~3 s the captured frame is annotated with the detected pose landmarks and shown for review.</p>
+    </li>
+    <li>
+      <h3>Confirm or override the surrogate</h3>
+      <p>The default surrogate is knee height (Chumlea 1985). For patients where knee height is unobtainable, select <em>demispan</em> (Bassey 1986) or <em>ulna</em> (BAPEN MUST tables) from the dropdown.</p>
+    </li>
+    <li>
+      <h3>Save</h3>
+      <p>The estimated stature is displayed with its SEE. Pressing <strong>Save Measurement</strong> writes three artefacts to the patient&rsquo;s folder under <code>data/measurements/&lt;patient_id&gt;/</code>: an annotated PNG (with the detected landmarks and a face-blurred patient image), a complete JSON measurement record, and an appended row in the master CSV log.</p>
+    </li>
+  </ol>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">05</div>
+</section>
+
+
+<!-- ============ §5 READING THE RESULT ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 5</div>
+  <h1 class="section-title">Reading the result</h1>
+  <hr class="rule">
+
+  <p>
+    Each saved measurement produces an annotated PNG that records what the system computed. Figure 1 shows the annotated output for a synthetic preview patient.
+  </p>
+
+  <figure>
+    <img src="demo_output.png" alt="annotated demo capture output">
+    <figcaption>
+      <strong>Figure 1.</strong>
+      Annotated capture output (synthetic preview). Estimated stature with SEE top-left; face-blurred patient inside the marker-bordered bed plane; green dots mark the pose landmarks consumed by the surrogate calculation.
+    </figcaption>
+  </figure>
+
+  <h2><span class="num">5.1</span>Reading the height value</h2>
+  <p>
+    The estimate appears as <code>HHH.H cm (+/- SEE)</code>. The number after &plusmn; is the formula&rsquo;s Standard Error of Estimate &mdash; the residual standard deviation of stature predictions on the formula&rsquo;s validation cohort. A value of <em>155.3 &plusmn; 3.5 cm</em> should be interpreted as: the patient&rsquo;s true stadiometer height is most likely within ~3.5 cm of 155.3 cm. The metadata strip beneath the number lists the formula ID, surrogate name, and segment length used.
+  </p>
+
+  <h2><span class="num">5.2</span>Reading the visual annotations</h2>
+  <ul class="clean">
+    <li><strong>Four ArUco markers at the corners</strong> &mdash; if fewer than four are visible, the system would have refused to compute a result.</li>
+    <li><strong>Face blur</strong> &mdash; applied automatically before disk write.</li>
+    <li><strong>Green landmark dots</strong> &mdash; only the landmarks <em>consumed by the chosen surrogate</em> are drawn (e.g. left knee, right knee, left ankle, right ankle for knee height). Other landmarks were detected but suppressed for clarity.</li>
+  </ul>
+
+  <div class="note">
+    <span class="tag">How to read &ldquo;&plusmn;&rdquo;</span>
+    SEE is honest reporting. Manual stadiometer-substitute methods (mechanical knee callipers, demispan tape) carry similar uncertainty in trained hands; reporting it explicitly distinguishes the system from a black box.
+  </div>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">06</div>
+</section>
+
+
+<!-- ============ §6 USER UI ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 6</div>
+  <h1 class="section-title">User interface</h1>
+  <hr class="rule">
+
+  <p>
+    During capture the live video preview is annotated with real-time computer-vision feedback so the user can confirm system readiness before taking the shot. Figure 2 shows the live overlay layer rendered on a synthetic frame.
+  </p>
+
+  <figure>
+    <img src="live_ui_overlay.png" alt="live UI overlay">
+    <figcaption>
+      <strong>Figure 2.</strong>
+      Live user UI on a nominal frame. ID tags label each detected ArUco marker; the bed-plane wireframe is reprojected via live homography. Bottom strip: per-frame QC. Top banner: auto-shutter readiness.
+    </figcaption>
+  </figure>
+
+  <h2><span class="num">6.1</span>Overlay elements</h2>
+  <ul class="clean">
+    <li><strong>ID tags + bounding boxes</strong> &mdash; maroon outlines around each detected marker. Confirms marker detection in real time.</li>
+    <li><strong>AR bed-plane wireframe</strong> &mdash; 60 &times; 180 cm rectangle, grid lines every 200 mm, L-corner ticks. All reprojected from the live homography.</li>
+    <li><strong>Pose skeleton</strong> &mdash; green joint dots and bones, drawn when the pose model detects a person in frame.</li>
+    <li><strong>QC strip</strong> &mdash; four pills along the bottom: <code>MARKERS</code>, <code>REPROJ</code>, <code>SHARPNESS</code>, <code>EXPOSURE</code>. Green when in spec, amber otherwise.</li>
+    <li><strong>READY banner</strong> &mdash; top-centre. Reads <em>AIM AT BED</em> while any QC pill is amber; <em>READY</em> in green with a 1.5 s progress bar when all conditions hold. Auto-shutter fires when the bar fills.</li>
+  </ul>
+
+  <h2><span class="num">6.2</span>Controls</h2>
+  <ul class="clean">
+    <li><strong>Snap now</strong> &mdash; manual shutter; captures the most recent clean frame immediately.</li>
+    <li><strong>Clear capture</strong> &mdash; discard the captured frame and resume the live preview.</li>
+    <li>The live caption beneath reports marker count, scale (mm/px), reprojection error, sharpness, pose state and readiness.</li>
+  </ul>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">07</div>
+</section>
+
+
+<!-- ============ §7 WARNINGS ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 7</div>
+  <h1 class="section-title">Warnings and quality flags</h1>
+  <hr class="rule">
+
+  <p class="lede">
+    The system does not refuse to produce a number. It returns the estimate together with any quality flags raised during the pipeline; the user makes the final clinical judgement on whether to trust it.
+  </p>
+
+  <div class="threecol">
+    <div>
+      <h3>Outside plausible range</h3>
+      <p>Estimated stature outside 100&ndash;220 cm. Almost always indicates a misplaced landmark; re-shoot.</p>
+    </div>
+    <div>
+      <h3>Cross-check disagreement</h3>
+      <p>Two surrogates measured on the same patient differ by more than 5 cm. Investigate before trusting either.</p>
+    </div>
+    <div>
+      <h3>Bilateral asymmetry</h3>
+      <p>Left/right paired measurements (e.g. left vs right knee height) differ by more than 2 cm. May reflect real anatomical asymmetry or a poorly detected landmark.</p>
+    </div>
+    <div>
+      <h3>Low pose confidence</h3>
+      <p>One or more required landmarks has visibility below 0.5. Often resolved by improving lighting or removing covering bedding.</p>
+    </div>
+    <div>
+      <h3>High calibration error</h3>
+      <p>Reprojection error > 4 px. Camera shifted, mat wrinkled, or one marker partially occluded. Re-flatten the mat and re-shoot.</p>
+    </div>
+    <div>
+      <h3>Age outside formula range</h3>
+      <p>Patient age is below or above the cohort the formula was validated on (Chumlea: 60&ndash;90 yr). Estimate is provided but extrapolated.</p>
+    </div>
+  </div>
+
+  <div class="caution">
+    <span class="tag">Important</span>
+    Warnings are <em>warnings</em>, not errors. The system trusts the user to make the final call. If anything on the screen looks wrong, it almost certainly is &mdash; re-shoot.
+  </div>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">08</div>
+</section>
+
+
+<!-- ============ §8 INDICATIONS ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 8</div>
+  <h1 class="section-title">Indications and limitations</h1>
+  <hr class="rule">
+
+  <p class="lede">
+    The system has clearly defined sweet-spots and equally clear limits. Read this section before using the result for any clinical purpose.
+  </p>
+
+  <h2><span class="num">8.1</span>Use freely for</h2>
+  <ul class="clean">
+    <li>Adult patients who can lie supine but cannot stand on a stadiometer.</li>
+    <li>Patients with kyphosis, scoliosis, lordosis, or moderate contractures &mdash; precisely the cases the surrogate-formula approach was designed to handle.</li>
+    <li>Routine repeat measurements where avoiding patient contact is preferable.</li>
+    <li>Research studies that require a per-measurement audit trail (annotated PNG + JSON record).</li>
+  </ul>
+
+  <h2><span class="num">8.2</span>Use with caution for</h2>
+  <ul class="clean">
+    <li>Children &mdash; the bundled formulas are derived from adult cohorts. Pediatric formulas are a planned addition. For pediatric measurements, cross-check against an age-appropriate tape (e.g. Broselow).</li>
+    <li>Patients of ethnicities not represented in the formula coefficient tables (currently white and Black). The system will refuse to estimate rather than guess wrong.</li>
+    <li>Patients with severe deformity of the limb being measured &mdash; switch to a different surrogate (e.g. ulna instead of knee height) and re-run.</li>
+  </ul>
+
+  <h2><span class="num">8.3</span>Do <em>not</em> use for</h2>
+  <ul class="clean">
+    <li>Clinical decisions where the &plusmn;3&ndash;5 cm SEE is unacceptable. Always combine with clinical judgement.</li>
+    <li>Patients who can be measured by stadiometer &mdash; a stadiometer is more precise.</li>
+    <li>Any clinical use until the system has been validated on the BART Lab patient population. The current release is for research and quality-improvement use only.</li>
+  </ul>
+
+  <div class="caution">
+    <span class="tag">Validation status</span>
+    v1.0 has been verified on a synthetic test fixture and a small phantom dataset. Clinical-grade validation against stadiometer ground-truth on the lab&rsquo;s patient population is the next milestone.
+  </div>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">09</div>
+</section>
+
+
+<!-- ============ §9 TROUBLESHOOTING ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 9</div>
+  <h1 class="section-title">Troubleshooting</h1>
+  <hr class="rule">
+
+  <table class="troubleshoot">
+    <thead>
+      <tr><th>Symptom</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Error: <em>only N of expected markers visible; need &ge;4</em></td>
+        <td>One or more bed markers obstructed by linen, the patient&rsquo;s arm, or a shadow. Uncover all four corners and re-shoot. If persistent, verify the mat geometry against the printed reference and ensure the camera frames all four IDs.</td>
+      </tr>
+      <tr>
+        <td>QC pill: <em>EXPOSURE</em> stays amber</td>
+        <td>Mean luminance is outside the [50, 220] band. Adjust room lighting; avoid direct sunlight or windowed reflections falling on the markers.</td>
+      </tr>
+      <tr>
+        <td>QC pill: <em>SHARPNESS</em> stays amber</td>
+        <td>Laplacian-variance sharpness below threshold. Wipe the lens, ensure the camera mount is rigid, and check that the patient is not moving during capture.</td>
+      </tr>
+      <tr>
+        <td>READY banner never goes green</td>
+        <td>One QC pill is amber. Check the live caption beneath the controls for which one (markers, reproj, sharpness, or exposure) is failing and address that condition. Manual <strong>Snap now</strong> always works as a fallback.</td>
+      </tr>
+      <tr>
+        <td>Estimated height is implausible (e.g. 80 cm for an adult)</td>
+        <td>One or more landmarks were placed in the wrong location. Inspect the green dots on the saved annotated PNG; if they are not on the correct joints, re-shoot with better lighting and remove any bedding covering the limb in question.</td>
+      </tr>
+      <tr>
+        <td>Application fails to start</td>
+        <td>From a terminal at the project root, run <code>venv/bin/streamlit run src/anthroheight/ui_streamlit.py</code> directly and capture the traceback. Send the screenshot to the developer (ggmr).</td>
+      </tr>
+      <tr>
+        <td>Need to inspect a past measurement</td>
+        <td>Open <code>data/measurements/&lt;patient_id&gt;/</code>. Each measurement is recorded as a timestamped PNG (annotated photo, face blurred), a JSON file (full pipeline record), and an appended row in the master CSV log.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <span class="tag">When in doubt</span>
+    Re-shoot. Capture is cheap (~3 s) and re-shoots leave no residue beyond the user&rsquo;s own time. Do not attempt to interpret a result that looks anomalous &mdash; take another image and compare.
+  </div>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">10</div>
+</section>
+
+
+<!-- ============ §10 GLOSSARY ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 10</div>
+  <h1 class="section-title">Glossary</h1>
+  <hr class="rule">
+
+  <table class="glossary">
+    <thead>
+      <tr><th>Term</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="term">Supine</td>
+          <td>Lying flat on the back, face up. The required patient position for capture.</td></tr>
+      <tr><td class="term">Anthropometry</td>
+          <td>Quantitative measurement of human-body dimensions. <em>anthroheight</em> abbreviates &ldquo;anthropometric height estimation&rdquo;.</td></tr>
+      <tr><td class="term">Stature</td>
+          <td>Standing height &mdash; the clinical target measurement. The quantity the system estimates from a supine capture.</td></tr>
+      <tr><td class="term">Surrogate measurement</td>
+          <td>A skeletal-segment length (knee height, demispan, ulna) used as the input to a stature-prediction regression because it is invariant to spinal-curvature and contracture-related stature loss.</td></tr>
+      <tr><td class="term">Knee height (Chumlea)</td>
+          <td>Heel-to-superior-patella distance with the knee flexed to 90&deg;. Strongly correlated with stature; primary surrogate for the elderly with vertebral height loss.</td></tr>
+      <tr><td class="term">Demispan (Bassey)</td>
+          <td>Sternal-notch to middle-fingertip distance with the arm extended laterally. Used when knee flexion is impossible.</td></tr>
+      <tr><td class="term">Ulna length (BAPEN MUST)</td>
+          <td>Olecranon-to-styloid forearm length. Most robust surrogate for severely disabled patients; mapped to stature via age-banded lookup tables endorsed by NICE&nbsp;CG32.</td></tr>
+      <tr><td class="term">ArUco marker</td>
+          <td>Square fiducial of known geometry from the OpenCV <code>cv2.aruco</code> library. Four are printed at known bed-plane coordinates to anchor the calibration homography.</td></tr>
+      <tr><td class="term">Homography</td>
+          <td>The 3 &times; 3 planar projective transform that maps points on the bed surface (mm) to image pixels and back. Solved per-frame from the four detected marker centroids.</td></tr>
+      <tr><td class="term">Pose landmark</td>
+          <td>A named, machine-detected anatomical point (e.g. left knee). 33 are returned per detected person by the MediaPipe model; the surrogate calculation uses the relevant subset.</td></tr>
+      <tr><td class="term">SEE</td>
+          <td>Standard Error of Estimate &mdash; residual standard deviation of a regression&rsquo;s stature predictions on its validation cohort. Reported alongside every result as the &ldquo;&plusmn;&rdquo; figure.</td></tr>
+      <tr><td class="term">Reprojection error</td>
+          <td>Mean Euclidean residual when source points are re-projected through the solved homography. Reported in pixels; gates the QC stage at 4 px.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">11</div>
+</section>
+
+
+<!-- ============ §11 REFERENCES ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 11</div>
+  <h1 class="section-title">References</h1>
+  <hr class="rule">
+
+  <h2><span class="num">11.1</span>Clinical references</h2>
+  <table class="refs">
+    <tbody>
+      <tr><td class="refnum">[1]</td>
+          <td>Chumlea WC, Roche AF, Steinbaugh ML. Estimating stature from knee height for persons 60 to 90 years of age. <em>Journal of the American Geriatrics Society</em>. 1985; 33(2): 116&ndash;120.</td></tr>
+      <tr><td class="refnum">[2]</td>
+          <td>Bassey EJ. Demi-span as a measure of skeletal size. <em>Annals of Human Biology</em>. 1986; 13(5): 499&ndash;502.</td></tr>
+      <tr><td class="refnum">[3]</td>
+          <td>British Association for Parenteral and Enteral Nutrition (BAPEN). <em>Malnutrition Universal Screening Tool (MUST)</em> &mdash; height-from-ulna lookup tables. Endorsed by NICE Clinical Guideline 32.</td></tr>
+      <tr><td class="refnum">[4]</td>
+          <td>National Institute for Health and Care Excellence. <em>Clinical Guideline CG32: Nutrition support for adults</em>. London: NICE; 2006 (updated 2017).</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="num">11.2</span>Software / library references</h2>
+  <table class="refs">
+    <tbody>
+      <tr><td class="refnum">[5]</td>
+          <td>Garrido-Jurado S, et al. Automatic generation and detection of highly reliable fiducial markers under occlusion. <em>Pattern Recognition</em>. 2014; 47(6): 2280&ndash;2292. (ArUco fiducial markers, <code>cv2.aruco</code>.)</td></tr>
+      <tr><td class="refnum">[6]</td>
+          <td>Bazarevsky V, et al. BlazePose: On-device Real-time Body Pose Tracking. <em>arXiv:2006.10204</em>; 2020. (MediaPipe Pose Landmarker model bundle.)</td></tr>
+      <tr><td class="refnum">[7]</td>
+          <td>Bradski G. The OpenCV library. <em>Dr.&nbsp;Dobb&rsquo;s Journal of Software Tools</em>; 2000. (Homography solve, <code>cv2.findHomography</code>; ArUco detector, <code>cv2.aruco.ArucoDetector</code>.)</td></tr>
+      <tr><td class="refnum">[8]</td>
+          <td>Lugaresi C, et al. MediaPipe: A Framework for Building Perception Pipelines. <em>arXiv:1906.08172</em>; 2019.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">12</div>
+</section>
+
+
+<!-- ============ §12 REVISION HISTORY ============ -->
+<section class="page">
+  <div class="red-eyebrow">section 12</div>
+  <h1 class="section-title">Revision history</h1>
+  <hr class="rule">
+
+  <p style="font-size: 10pt;">
+    Development arc from project kickoff to the v1.0 first issue. Dated entries correspond to milestones discussed at internal lab progress reviews.
+  </p>
+
+  <table class="revhistory">
+    <thead>
+      <tr><th>Version</th><th>Date</th><th>Author</th><th>Change summary</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="ver">0.1</td>
+        <td class="date">2026-03-09</td>
+        <td class="who">ggmr</td>
+        <td>Project kickoff. Design specification and 16-task implementation plan committed; brainstorming notes archived. Repository conventions (TDD, frequent commits, conventional-commit messages) established.</td>
+      </tr>
+      <tr>
+        <td class="ver">0.2</td>
+        <td class="date">2026-03-16</td>
+        <td class="who">ggmr</td>
+        <td>Package scaffold under <code>src/anthroheight/</code>. Pydantic v2 record schemas (<code>PatientMetadata</code>, <code>CalibrationResult</code>, <code>Landmark</code>, <code>HeightEstimate</code>, <code>MeasurementRecord</code>) with <code>extra="forbid"</code>.</td>
+      </tr>
+      <tr>
+        <td class="ver">0.3</td>
+        <td class="date">2026-03-23</td>
+        <td class="who">ggmr</td>
+        <td>Surrogate formulas: Chumlea 1985 knee-height regression with sex / ethnicity coefficient table; Bassey 1986 demispan regression. Unit-tested against published worked examples.</td>
+      </tr>
+      <tr>
+        <td class="ver">0.4</td>
+        <td class="date">2026-03-30</td>
+        <td class="who">ggmr</td>
+        <td>BAPEN MUST ulna-length lookup tables with age-banded interpolator. Fix: exact-boundary inputs no longer trigger spurious &ldquo;clamped&rdquo; warnings.</td>
+      </tr>
+      <tr>
+        <td class="ver">0.5</td>
+        <td class="date">2026-04-06</td>
+        <td class="who">ggmr</td>
+        <td>Calibration: ArUco <code>DICT_5X5_50</code> detection plus RANSAC bed-plane homography; reprojection error reported in pixels. Surrogate-segment math via homography transform of detected landmarks.</td>
+      </tr>
+      <tr>
+        <td class="ver">0.6</td>
+        <td class="date">2026-04-13</td>
+        <td class="who">ggmr</td>
+        <td>Pose / hand wrappers re-implemented against the MediaPipe Tasks API after the legacy <code>solutions</code> module was dropped in 0.10.18; legacy mock contract preserved via adapter classes. Capture QC gates (blur, exposure, marker count) added.</td>
+      </tr>
+      <tr>
+        <td class="ver">0.7</td>
+        <td class="date">2026-04-20</td>
+        <td class="who">ggmr</td>
+        <td><code>io_export</code> module (face-blurred annotated PNG + JSON record + CSV log) and end-to-end <code>pipeline</code> orchestrator. Phantom-validation eval harness (<code>eval/phantom_eval.py</code>) added. Unit-test suite at 66 passing.</td>
+      </tr>
+      <tr>
+        <td class="ver">0.8</td>
+        <td class="date">2026-04-24</td>
+        <td class="who">ggmr</td>
+        <td>Streamlit user UI v1 (capture &rarr; flag review &rarr; surrogate selection &rarr; save). Cream / maroon theme tokens. Demo-mode toggle and synthetic-image fixtures for offline meeting demos.</td>
+      </tr>
+      <tr>
+        <td class="ver">0.9</td>
+        <td class="date">2026-04-26</td>
+        <td class="who">ggmr</td>
+        <td>UI refresh: AI-generated stylistic tells removed (uppercase eyebrows, decorative cards, dual fonts). Bed-mat marker sheet PDF published. Pre-meeting documentation pass.</td>
+      </tr>
+      <tr>
+        <td class="ver">1.0</td>
+        <td class="date">2026-04-27</td>
+        <td class="who">ggmr</td>
+        <td>First public issue. Live-CV user UI via <code>streamlit-webrtc</code>: per-frame ArUco detection, AR bed-plane wireframe, pose-skeleton overlay, QC strip and 1.5&nbsp;s auto-shutter. User Manual v1.0 published as <code>DOC-AH-UM-v1.0</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footline">
+    <span>anthroheight &middot; User Manual &middot; v1.0</span>
+    <span class="doc-id">DOC-AH-UM-v1.0</span>
+  </div>
+  <div class="pageno">13</div>
+</section>
+
+</body>
+</html>

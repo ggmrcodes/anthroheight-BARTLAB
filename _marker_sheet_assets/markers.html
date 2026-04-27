@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>anthroheight — bed-mat marker sheet</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #fff; }
+  body {
+    font-family: 'Helvetica Neue', system-ui, sans-serif;
+    color: #1A1A1A;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .sheet {
+    width: 210mm; height: 297mm;
+    padding: 12mm 14mm;
+    display: flex; flex-direction: column;
+  }
+  .header { margin-bottom: 3mm; flex: 0 0 auto; }
+  .header .eyebrow {
+    color: #9B2520; font-size: 8.5pt; letter-spacing: 1.4px;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .header h1 {
+    font-size: 14pt; font-weight: 500; margin-top: 1mm;
+  }
+  .header .sub {
+    font-size: 9pt; color: #555550; margin-top: 1mm;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 70mm 70mm;
+    grid-template-rows: auto auto;
+    gap: 6mm 14mm;
+    justify-content: space-around;
+    margin-top: 2mm;
+    flex: 0 0 auto;
+  }
+  .tile {
+    width: 70mm; height: 78mm;
+    border: 1px dashed #888;
+    padding: 1.5mm;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .tile .label-top {
+    font-size: 7.5pt; color: #555550;
+    width: 100%; display: flex; justify-content: space-between;
+    margin-bottom: 1mm;
+  }
+  .tile .label-top .id {
+    font-weight: 700; color: #9B2520;
+  }
+  .tile img {
+    width: 65mm; height: 65mm; image-rendering: pixelated;
+  }
+  .tile .label-bot {
+    font-size: 6.5pt; color: #888; margin-top: 1mm;
+  }
+
+  .footer {
+    margin-top: 6mm;
+    display: grid; grid-template-columns: 56mm 1fr; gap: 10mm;
+    align-items: flex-start;
+    flex: 0 0 auto;
+  }
+  .diagram { background: #fafafa; border: 1px solid #ddd; padding: 4mm; }
+  .diagram .cap { font-size: 7.5pt; color: #555550; margin-top: 2mm; }
+  .instructions { font-size: 8.5pt; line-height: 1.5; }
+  .instructions strong { color: #9B2520; }
+  .instructions ol { padding-left: 14pt; margin-top: 1mm; }
+  .instructions li { margin-bottom: 1mm; }
+  .scale-check {
+    border: 1px solid #1A1A1A;
+    width: 50mm; height: 5mm;
+    margin-top: 2mm; position: relative;
+  }
+  .scale-check span {
+    position: absolute; top: -8pt; right: 0;
+    font-size: 7pt; color: #555550;
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="header">
+    <div class="eyebrow">anthroheight · bart lab</div>
+    <h1>Bed-Mat Marker Sheet</h1>
+    <div class="sub">Print at 100% scale (no &ldquo;fit to page&rdquo;), cut along dashed lines, place on bed/floor as shown.</div>
+  </div>
+
+  <div class="grid">
+    <div class="tile">
+      <div class="label-top"><span>head &mdash; left</span><span class="id">ID 0</span></div>
+      <img src="marker_0.png" alt="ArUco marker 0">
+      <div class="label-bot">DICT_5X5_50 &middot; 65 &times; 65 mm</div>
+    </div>
+    <div class="tile">
+      <div class="label-top"><span>head &mdash; right</span><span class="id">ID 1</span></div>
+      <img src="marker_1.png" alt="ArUco marker 1">
+      <div class="label-bot">DICT_5X5_50 &middot; 65 &times; 65 mm</div>
+    </div>
+    <div class="tile">
+      <div class="label-top"><span>foot &mdash; left</span><span class="id">ID 3</span></div>
+      <img src="marker_3.png" alt="ArUco marker 3">
+      <div class="label-bot">DICT_5X5_50 &middot; 65 &times; 65 mm</div>
+    </div>
+    <div class="tile">
+      <div class="label-top"><span>foot &mdash; right</span><span class="id">ID 2</span></div>
+      <img src="marker_2.png" alt="ArUco marker 2">
+      <div class="label-bot">DICT_5X5_50 &middot; 65 &times; 65 mm</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="diagram">
+      <svg viewBox="0 0 60 180" width="100%" preserveAspectRatio="xMidYMid meet" style="max-height: 65mm">
+        <rect x="0" y="0" width="60" height="180" fill="none" stroke="#1A1A1A" stroke-width="0.6"/>
+        <!-- markers as small black squares at corners -->
+        <rect x="-3" y="-3" width="6" height="6" fill="#1A1A1A"/>
+        <rect x="57" y="-3" width="6" height="6" fill="#1A1A1A"/>
+        <rect x="57" y="177" width="6" height="6" fill="#1A1A1A"/>
+        <rect x="-3" y="177" width="6" height="6" fill="#1A1A1A"/>
+        <text x="-6" y="0" font-size="5" text-anchor="end" fill="#9B2520" font-weight="700">0</text>
+        <text x="66" y="0" font-size="5" fill="#9B2520" font-weight="700">1</text>
+        <text x="66" y="183" font-size="5" fill="#9B2520" font-weight="700">2</text>
+        <text x="-6" y="183" font-size="5" text-anchor="end" fill="#9B2520" font-weight="700">3</text>
+        <text x="30" y="92" font-size="6" text-anchor="middle" fill="#888" transform="rotate(-90 30 92)">patient lies here</text>
+        <text x="30" y="105" font-size="4" text-anchor="middle" fill="#aaa" transform="rotate(-90 30 105)">600 mm &times; 1800 mm</text>
+        <line x1="68" y1="0" x2="68" y2="180" stroke="#888" stroke-width="0.3"/>
+        <line x1="66" y1="0" x2="70" y2="0" stroke="#888" stroke-width="0.3"/>
+        <line x1="66" y1="180" x2="70" y2="180" stroke="#888" stroke-width="0.3"/>
+        <text x="76" y="93" font-size="5" fill="#555">180 cm</text>
+      </svg>
+      <div class="cap">Place marker centres at the four corners of a 60 cm &times; 180 cm rectangle. The patient lies inside, head at the &ldquo;0/1&rdquo; end.</div>
+    </div>
+
+    <div class="instructions">
+      <p><strong>Setup steps</strong></p>
+      <ol>
+        <li>Print this sheet at <strong>100 % scale</strong>. Verify with the ruler check below &mdash; the bar should measure exactly 5 cm.</li>
+        <li>Cut along the four dashed boxes.</li>
+        <li>Lay the four markers face-up on the bed mat or floor in the rectangle shown to the left, IDs in the labelled positions.</li>
+        <li>Patient lies supine inside the rectangle, head at the 0/1 end, arms by their sides.</li>
+        <li>Take one overhead photo so all four markers are clearly visible &mdash; phone on a chair / tripod aimed straight down works fine.</li>
+        <li>Upload to the anthroheight UI; with all four markers detected the system computes the bed-plane scale automatically.</li>
+      </ol>
+      <p style="margin-top:2mm"><strong>Scale check &mdash; this bar should measure exactly 5 cm</strong></p>
+      <div class="scale-check"><span>5 cm</span></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
