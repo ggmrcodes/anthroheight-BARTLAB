@@ -54,3 +54,13 @@ docs/superpowers/
 # Local environment
 .env
 .env.local
+
+# Downloaded ML model bundles (re-fetched by anyone who clones, not source)
+models/
+
+# Demo runtime artifacts (output of `python -m demo.demo_synthetic`)
+demo/output/
+
+# Progress reports — kept locally, not published with the package
+_Progress Report*.pdf
+_progress_report_*_assets/
