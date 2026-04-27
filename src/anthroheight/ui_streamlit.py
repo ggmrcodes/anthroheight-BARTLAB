@@ -1,6 +1,7 @@
 """Streamlit operator UI: capture → flag review → surrogate pick → save."""
 from __future__ import annotations
 from datetime import datetime, timezone
+import os
 from pathlib import Path
 import cv2
 import numpy as np
@@ -13,7 +14,7 @@ from anthroheight.io_export import export
 from tests.fixtures.synthetic_aruco import BED_CORNERS_MM   # placeholder bed layout
 
 
-DATA_ROOT = Path("data/measurements")
+DATA_ROOT = Path(os.getenv("ANTHROHEIGHT_DATA_ROOT", "data/measurements")).resolve()
 
 
 def _patient_form() -> PatientMetadata | None:
@@ -62,7 +63,11 @@ def main() -> None:
             image = cv2.imdecode(arr, cv2.IMREAD_COLOR)
     else:
         if st.button("Capture frame"):
-            image = capture_from_camera()
+            try:
+                image = capture_from_camera()
+            except RuntimeError as e:
+                st.error(f"Camera capture failed: {e}")
+                return
 
     if image is None:
         return
@@ -80,15 +85,19 @@ def main() -> None:
     if not st.button("Run measurement"):
         return
 
-    rec = pipeline_run(
-        image_bgr=image,
-        patient=patient,
-        chosen_surrogate=surrogate,
-        side_preference=side,
-        operator_id=operator,
-        expected_marker_layout=BED_CORNERS_MM,
-        timestamp_iso=datetime.now(timezone.utc).isoformat(),
-    )
+    try:
+        rec = pipeline_run(
+            image_bgr=image,
+            patient=patient,
+            chosen_surrogate=surrogate,
+            side_preference=side,
+            operator_id=operator,
+            expected_marker_layout=BED_CORNERS_MM,
+            timestamp_iso=datetime.now(timezone.utc).isoformat(),
+        )
+    except Exception as e:
+        st.error(f"Measurement failed: {type(e).__name__}: {e}")
+        return
 
     st.subheader("Result")
     st.metric("Estimated standing height",
