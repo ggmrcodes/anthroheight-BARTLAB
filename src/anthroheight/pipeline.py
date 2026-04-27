@@ -51,15 +51,15 @@ def run(
 
     cal = calibrate(image_bgr, expected_marker_layout=expected_marker_layout)
 
-    pose_detector = PoseDetector()
-    landmarks = pose_detector.detect(image_bgr)
+    with PoseDetector() as pose_detector:
+        landmarks = pose_detector.detect(image_bgr)
 
-    if chosen_surrogate == "demispan":
-        hand_detector = HandDetector()
-        side = "left" if side_preference != "right" else "right"
-        ft = hand_detector.detect_middle_fingertip(image_bgr, side=side)
-        if ft is not None:
-            landmarks = landmarks + [ft]
+        if chosen_surrogate == "demispan":
+            with HandDetector() as hand_detector:
+                side = "left" if side_preference != "right" else "right"
+                ft = hand_detector.detect_middle_fingertip(image_bgr, side=side)
+                if ft is not None:
+                    landmarks = landmarks + [ft]
 
     flags_ = compute_flags(landmarks)
 
@@ -69,6 +69,10 @@ def run(
 
     estimate = _apply_formula(chosen_surrogate, surrogate_meas.segment_length_mm, patient)
 
+    # NOTE: other_estimates is empty in v1 — pipeline runs a single surrogate
+    # per call. Spec §4.8 cross-check (multiple surrogates per session) is a
+    # v2 feature; the operator can call run() multiple times and pass prior
+    # estimates manually if cross-check is needed today.
     validation = validate_run(estimate, surrogate_meas, cal, other_estimates=[])
 
     return MeasurementRecord(

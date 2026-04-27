@@ -37,7 +37,10 @@ def test_pipeline_end_to_end_knee_height(tmp_path):
         operator_input_flags={}, notes="",
     )
     with patch("anthroheight.pipeline.PoseDetector") as pose_cls:
-        pose_cls.return_value.detect.return_value = _identity_landmarks()
+        mock_pose = pose_cls.return_value
+        mock_pose.__enter__.return_value = mock_pose
+        mock_pose.__exit__.return_value = None
+        mock_pose.detect.return_value = _identity_landmarks()
         rec = pipeline.run(
             image_bgr=img,
             patient=pm,
@@ -66,7 +69,10 @@ def test_pipeline_records_validation_warnings_for_low_confidence(tmp_path):
         for lm in weak
     ]
     with patch("anthroheight.pipeline.PoseDetector") as pose_cls:
-        pose_cls.return_value.detect.return_value = weak
+        mock_pose = pose_cls.return_value
+        mock_pose.__enter__.return_value = mock_pose
+        mock_pose.__exit__.return_value = None
+        mock_pose.detect.return_value = weak
         rec = pipeline.run(
             image_bgr=img,
             patient=pm,
