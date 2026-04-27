@@ -168,6 +168,24 @@
     font-size: 9pt;
   }
 
+  /* institutional logo strip on cover */
+  .cover-logos {
+    background: #ffffff;
+    padding: 6mm 8mm;
+    border: 0.5px solid #B0AB9E;
+    border-radius: 2pt;
+    width: 105mm;
+    margin: 0 0 10mm 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cover-logos img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
   /* document control header on cover */
   table.doc-control {
     width: 100%;
@@ -323,7 +341,11 @@
 
 <!-- ============ COVER ============ -->
 <section class="page">
-  <div style="margin-top: 18mm;">
+  <div style="margin-top: 4mm;">
+    <div class="cover-logos">
+      <img src="institutional_logos.png"
+           alt="Mahidol University &middot; BART Lab, Center for Biomedical and Robotics Technology, Faculty of Engineering">
+    </div>
     <div class="red-eyebrow">bart lab &middot; user manual</div>
     <h1 class="cover-title" style="margin-top: 8pt; max-width: 130mm;">
       anthroheight
