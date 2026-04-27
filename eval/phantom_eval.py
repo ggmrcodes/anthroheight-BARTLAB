@@ -15,7 +15,7 @@ import sys
 from anthroheight.capture import capture_from_file, run_qc
 from anthroheight.records import PatientMetadata
 from anthroheight.pipeline import run as pipeline_run
-from tests.fixtures.synthetic_aruco import BED_CORNERS_MM
+from anthroheight.bed_layouts import BED_CORNERS_MM
 
 
 RESULT_FIELDS = [

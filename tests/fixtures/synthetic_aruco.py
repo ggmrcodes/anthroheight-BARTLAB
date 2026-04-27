@@ -1,18 +1,16 @@
 """Generate a synthetic image with 4 ArUco markers placed at known locations
-on a simulated bed plane. Used to drive calibration tests deterministically."""
+on a simulated bed plane. Used to drive calibration tests deterministically.
+
+The canonical bed coordinates are imported from the runtime package so that
+production code (UI, eval harness, demo) can also consume them without
+test-tree dependencies."""
 import cv2
 import numpy as np
 
+from anthroheight.bed_layouts import BED_CORNERS_MM  # re-exported for tests
+
 DICT = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_50)
 MARKER_IDS = [0, 1, 2, 3]
-# Bed coordinate system: top-left of bed = (0,0), x rightward, y down, in mm.
-# 60x180 cm rectangle = 600x1800 mm.
-BED_CORNERS_MM = {
-    0: (0.0, 0.0),
-    1: (600.0, 0.0),
-    2: (600.0, 1800.0),
-    3: (0.0, 1800.0),
-}
 
 
 def make_image(image_shape: tuple[int, int] = (1800, 1200),

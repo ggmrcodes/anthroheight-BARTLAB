@@ -93,6 +93,12 @@ class PoseDetector:
         model_complexity: int = 2,
         static_image_mode: bool = True,
     ) -> None:
+        # If no explicit model_path, fall back to ANTHROHEIGHT_POSE_MODEL env var.
+        import os
+        if model_path is None:
+            env = os.environ.get("ANTHROHEIGHT_POSE_MODEL")
+            if env:
+                model_path = env
         self._model_path: Optional[Path] = (
             Path(model_path) if model_path is not None else None
         )

@@ -65,7 +65,8 @@ def _blur_face(image_bgr: np.ndarray, record: MeasurementRecord,
 
 def _annotate(image_bgr: np.ndarray, record: MeasurementRecord) -> np.ndarray:
     out = image_bgr.copy()
-    text = f"{record.estimate.height_cm:.1f} cm  (±{record.estimate.standard_error_cm:.1f})"
+    # cv2.putText uses Hershey fonts which are ASCII-only; "±" → "??".
+    text = f"{record.estimate.height_cm:.1f} cm  (+/- {record.estimate.standard_error_cm:.1f})"
     cv2.putText(out, text, (30, 60),
                 cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3)
     used_names = {n for (n, _) in record.surrogate.landmarks_used}
