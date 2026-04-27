@@ -42,6 +42,9 @@ Thumbs.db
 # Project runtime data — patient captures, logs, exports
 data/
 
+# Eval runtime artifacts (per-run CSVs and test images)
+eval/results/
+
 # Brainstorming artifacts (visual-companion mockups, session state)
 .superpowers/
 
