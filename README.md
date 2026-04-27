@@ -2,10 +2,6 @@
 
 Single-RGB computer vision for anthropometric standing-height estimation in supine disabled patients. Uses validated surrogate formulas (Chumlea knee height, Bassey demispan, MUST ulna length) over ArUco-calibrated MediaPipe pose landmarks.
 
-See:
-- Design spec: `docs/superpowers/specs/2026-04-27-anthropometric-supine-height-cv-design.md`
-- Implementation plan: `docs/superpowers/plans/2026-04-27-anthropometric-supine-height-cv.md`
-
 ## Install
 
 ```bash
@@ -45,7 +41,6 @@ python -m eval.phantom_eval --ground-truth eval/ground_truth.csv \
 src/anthroheight/   runtime package
 tests/              unit tests (mirrors src/)
 eval/               offline validation harness
-docs/superpowers/   design + plans
 data/               runtime outputs (gitignored)
 ```
 
