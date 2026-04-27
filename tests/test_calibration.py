@@ -1,6 +1,7 @@
 """ArUco detection + homography for the bed-plane calibration."""
 import numpy as np
 import pytest
+from unittest.mock import patch
 from tests.fixtures.synthetic_aruco import make_image, BED_CORNERS_MM
 from anthroheight import calibration
 
@@ -32,3 +33,20 @@ def test_homography_maps_marker_to_known_mm():
     mm_x, mm_y = pt[0] / pt[2], pt[1] / pt[2]
     assert abs(mm_x - 0.0) < 5.0   # within 5 mm
     assert abs(mm_y - 0.0) < 5.0
+
+
+def test_calibrate_rejects_degenerate_marker_layout():
+    """Two markers detected at the same pixel coords must raise, not silently
+    return a bogus reprojection error in mm units."""
+    img, _ = make_image()
+    fake_corners = [
+        np.array([[[100.0, 100.0], [110.0, 100.0], [110.0, 110.0], [100.0, 110.0]]]),
+        np.array([[[100.0, 100.0], [110.0, 100.0], [110.0, 110.0], [100.0, 110.0]]]),  # duplicate
+        np.array([[[200.0, 100.0], [210.0, 100.0], [210.0, 110.0], [200.0, 110.0]]]),
+        np.array([[[200.0, 200.0], [210.0, 200.0], [210.0, 210.0], [200.0, 210.0]]]),
+    ]
+    fake_ids = np.array([[0], [1], [2], [3]])
+    with patch("anthroheight.calibration.cv2.aruco.ArucoDetector") as detector_cls:
+        detector_cls.return_value.detectMarkers.return_value = (fake_corners, fake_ids, None)
+        with pytest.raises(calibration.InsufficientMarkersError):
+            calibration.calibrate(img, expected_marker_layout=BED_CORNERS_MM)

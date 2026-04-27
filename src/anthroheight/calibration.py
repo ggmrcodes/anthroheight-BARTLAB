@@ -64,10 +64,17 @@ def calibrate(
         a_px, b_px = matched[0][1], matched[1][1]
         mm_dist = float(np.linalg.norm(np.array(a_mm) - np.array(b_mm)))
         px_dist = float(np.linalg.norm(a_px - b_px))
-        mm_per_px = mm_dist / px_dist if px_dist > 0 else 0.0
+        if px_dist == 0 or mm_dist == 0:
+            raise InsufficientMarkersError(
+                "degenerate marker layout: two markers at the same "
+                "pixel or mm coordinates — cannot compute scale."
+            )
+        mm_per_px = mm_dist / px_dist
     else:
-        mm_per_px = 0.0
-    rep_err_px = rep_err_mm / mm_per_px if mm_per_px > 0 else rep_err_mm
+        raise InsufficientMarkersError(
+            "need at least 2 distinct markers to compute scale"
+        )
+    rep_err_px = rep_err_mm / mm_per_px
 
     return CalibrationResult(
         homography_matrix=H.tolist(),
