@@ -49,12 +49,12 @@ def _band(age_years: int) -> str:
 def _interpolate(table: dict[float, float], ulna_cm: float) -> tuple[float, list[str]]:
     keys = sorted(table.keys())
     warnings: list[str] = []
-    if ulna_cm <= keys[0]:
+    if ulna_cm < keys[0]:
         warnings.append(
             f"ulna {ulna_cm} cm below table minimum {keys[0]} — clamped."
         )
         return table[keys[0]], warnings
-    if ulna_cm >= keys[-1]:
+    if ulna_cm > keys[-1]:
         warnings.append(
             f"ulna {ulna_cm} cm above table maximum {keys[-1]} — clamped."
         )
